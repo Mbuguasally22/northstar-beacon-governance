@@ -178,7 +178,9 @@ Note from the submitter: the Recommend Decline path is the highest-risk output. 
 | Technical owner | Director, Credit Analytics Engineering | Attested | 2026-03-16 |
 | AI Governance Office (validation) | AI Governance Analyst | Accepted to inventory with open items | 2026-03-20 |
 | Assigned risk tier | AI Governance Office | High (score 16). See 03-risk-assessment/Risk-Tiering-Methodology.md, section 8 | 2026-03-20 |
+
 ## Open Items Register
+
 
 | ID | Open item | Owner | Follow-up date |
 |---|---|---|---|
