@@ -1,4 +1,3 @@
-````markdown
 # Northstar Financial: AI Lifecycle Governance for Beacon
 
 **Fictional case study. Northstar Financial and all figures are invented for portfolio purposes.**
@@ -285,4 +284,9 @@ Open items from the intake, and the gate each must close by:
 - Rollback without Committee approval reduces harm quickly but can restore an older version with known weaknesses. The next-day documentation is the check.
 - This is a design. No gate has been run and no Committee has reviewed a pack. Pack contents and decision times have not been tested with real teams.
 - Depth for Low and Moderate tiers is described at summary level only (section 5). Beacon is High, so only the High path is worked in detail.
-````
+
+
+
+
+
+
