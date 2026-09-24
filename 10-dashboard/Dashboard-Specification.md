@@ -176,3 +176,27 @@ Totals: 1 red (B2), 7 amber, 8 green, 2 context. 18 metrics.
 ## 11. Checks
 
 - There are 18 metrics. All 11 you asked for are covered: systems in inventory (A1), systems by tier (A2), overdue risk assessments (B1), unresolved high-risk
+- There are 18 metrics. All 11 you asked for are covered: systems in inventory (A1), systems by tier (A2), overdue risk assessments (B1), unresolved high-risk findings (B2), model incidents (C1), fairness indicators (C2), model performance degradation (C3), vendor issues (D1), human override rates (C4), policy exceptions (B5) and control testing results (B4).
+- The six lifecycle metrics from the lifecycle document are covered: stage and tier (A1, A2), gates open beyond 10 business days with holds and failures by gate (A4), conditions overdue (A6), days from intake to tier (A5) and retroactive intakes (A3).
+- The mock stage counts add to 22 and the tier counts add to 22. Status counts add to 18 (1 red, 7 amber, 8 green, 2 context).
+- The Beacon numbers match the incident case study: 34 controls, the fairness series, override 25 percent during the incident against a 12 percent baseline, notification in 1 hour 35 minutes, suspension decision in 4 hours 25 minutes, resumption on Apr 19, 12 corrective actions with 9 open, and the exit review on 2027-06-14.
+- Thresholds taken from earlier artifacts: fairness triggers (R-01), PSI 0.10 and 0.25 (CTL-12), Gini 10 percent (R-02), concordance above 90 percent and override below 3 percent (CTL-08), capture 98 percent (CTL-15), 4 and 24 hour response targets (CTL-33), blind re-review decline over two quarters (R-16) and the 10 business day gate rule (lifecycle rule 6).
+- New starting values introduced here: the bands for A3, A4, A5, B1, B2, B4 and B5, the amber band for C3 (Gini down 5 to 10 percent), the review time bands for C5, the amber band for override above 20 percent in C4 (from the incident heightened monitoring) and the amber band in C6.
+
+## 12. Framework alignment (indicative, verify before citing)
+
+- **NIST AI RMF:** GOVERN 1.5 (ongoing monitoring and periodic review), GOVERN 1.6 (inventory), MEASURE 4.1 and MEASURE 4.2 (measurement in the deployment context) and MANAGE 4.1 (post-deployment monitoring). Check the wording against the Playbook.
+- **ISO/IEC 42001:** Clause 9.1 (monitoring, measurement, analysis and evaluation) and Clause 9.3 (management review). Verify clause references against a licensed copy.
+- **EU AI Act (benchmark only):** Article 72 (post-market monitoring). Verify current status and timelines.
+- **OSFI E-23:** expectations for ongoing model monitoring and management reporting (confirm scope and effective date).
+
+## 13. Limitations
+
+- Every value in sections 7 to 9 is invented, and only Beacon has real detail behind it. The other 21 systems exist to fill the portfolio panels.
+- The snapshot assumes Beacon has passed G5 and G6 and started its pilot. The lifecycle document shows Beacon at an earlier point, which is a different date.
+- The thresholds are starting values. They were written before the mock data, but they have not been calibrated against real systems.
+- Concordance and override are close to complements on Recommend Decline files, so the two thresholds in CTL-08 overlap. The pilot baseline (84 percent concordance) already sits close to the 90 percent trigger. They should be calibrated together on the pilot baseline (OI-08), and this document does not change them.
+- A dashboard shows what has been measured. The incident case study shows a fault that ran 19 days before anyone connected the signals, so a green dashboard is not evidence of safety.
+- Status in B3 is self-reported, and A3 counts only systems that were found.
+- Real data would need sources that do not exist here: a metrics store, an exception register and a control status field in the matrix.
+- This is a specification with mock data. Nothing has been built or connected to real systems.
