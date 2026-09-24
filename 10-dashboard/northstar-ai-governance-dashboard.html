@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Northstar Financial: AI Governance Dashboard (mock data)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1f5; --surface:#ffffff; --surface2:#f3f6f9; --ink:#0f1a2c; --muted:#4a5769; --line:#d2d9e3;
+  --accent:#1c4a7a; --seg2:#6f9bc6; --seg3:#b8c4d3;
+  --green:#17714c; --amber:#a35f00; --red:#b3261e;
+  --green-bg:#e3f3ea; --amber-bg:#fbeed8; --red-bg:#fbe4e2; --ctx-bg:#e6ebf2; --band:#f3e7e5;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d131c; --surface:#151d29; --surface2:#1b2534; --ink:#e7ecf3; --muted:#9aa7b9; --line:#263245;
+    --accent:#7db3e6; --seg2:#4d7aa6; --seg3:#3d4b60;
+    --green:#4cc38f; --amber:#e6a53c; --red:#f4695e;
+    --green-bg:#12352a; --amber-bg:#3a2c12; --red-bg:#3d1c1a; --ctx-bg:#223044; --band:#2a1f24;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d131c; --surface:#151d29; --surface2:#1b2534; --ink:#e7ecf3; --muted:#9aa7b9; --line:#263245;
+  --accent:#7db3e6; --seg2:#4d7aa6; --seg3:#3d4b60;
+  --green:#4cc38f; --amber:#e6a53c; --red:#f4695e;
+  --green-bg:#12352a; --amber-bg:#3a2c12; --red-bg:#3d1c1a; --ctx-bg:#223044; --band:#2a1f24;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 12px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--sans);-webkit-text-size-adjust:100%}
+.wrap{max-width:1180px;margin:0 auto;padding:28px max(clamp(16px,4vw,40px),env(safe-area-inset-right,0px)) 72px max(clamp(16px,4vw,40px),env(safe-area-inset-left,0px))}
+h1,h2,h3{margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+h1{font:500 clamp(32px,5.4vw,50px)/1.08 var(--serif);letter-spacing:-0.015em}
+.sub{margin:8px 0 0;color:var(--muted);max-width:60ch}
+.top-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.badge{display:inline-block;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 14px;font-size:14px}
+.themebtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 12px;font:500 14px var(--sans);cursor:pointer}
+
+.overview{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px clamp(16px,3vw,30px)}
+.tally{margin:0;font:500 clamp(20px,2.6vw,26px)/1.3 var(--serif)}
+.tally span{color:var(--muted);font-weight:400}
+.hint{margin:6px 0 0;color:var(--muted);font-size:14px}
+.strip{display:flex;flex-wrap:wrap;gap:22px 32px;margin-top:20px}
+.grp h3{font:500 14px var(--sans);color:var(--muted);margin:0 0 8px}
+.tiles{display:flex;gap:6px;flex-wrap:wrap}
+.tile{width:54px;height:48px;border-radius:6px;border:1.5px solid var(--line);background:var(--surface2);color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font:600 13px var(--sans);cursor:pointer;padding:0}
+.tile i{font-style:normal;font-size:11px;line-height:1}
+.tile.s-green{background:var(--green-bg);border-color:var(--green)} .tile.s-green i{color:var(--green)}
+.tile.s-amber{background:var(--amber-bg);border-color:var(--amber)} .tile.s-amber i{color:var(--amber)}
+.tile.s-red{background:var(--red-bg);border-color:var(--red)} .tile.s-red i{color:var(--red)}
+.tile.s-context{background:var(--ctx-bg);border-color:var(--muted)} .tile.s-context i{color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:16px;font-size:14px;color:var(--muted)}
+
+.nav{display:flex;gap:4px;margin-top:30px;border-bottom:1px solid var(--line);overflow-x:auto}
+.navbtn{background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-1px;padding:12px 16px;font:500 16px var(--sans);color:var(--muted);cursor:pointer;white-space:nowrap}
+.navbtn[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+.view{margin-top:8px}
+
+.sec{margin:34px 0 14px}
+.sec h2{font:500 clamp(22px,3vw,28px)/1.2 var(--serif)}
+.sec p{margin:4px 0 0;color:var(--muted);max-width:70ch}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,350px),1fr));gap:16px}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px;min-width:0}
+.card:focus{outline:2px solid var(--accent)}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.card h3{font:600 16px/1.35 var(--sans)}
+.mid{color:var(--muted);font-weight:500;margin-right:4px}
+.val{margin:12px 0 2px;font:500 clamp(26px,3.2vw,34px)/1.12 var(--serif);font-variant-numeric:lining-nums tabular-nums}
+.note{margin:6px 0 0;color:var(--muted);font-size:14.5px}
+.linkbtn{background:none;border:0;padding:0;margin-top:10px;color:var(--accent);font:500 14px var(--sans);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font:600 13px/1.3 var(--sans);white-space:nowrap}
+.pill.green{background:var(--green-bg);color:var(--green)}
+.pill.amber{background:var(--amber-bg);color:var(--amber)}
+.pill.red{background:var(--red-bg);color:var(--red)}
+.pill.context{background:var(--ctx-bg);color:var(--muted)}
+.pill span{font-size:11px}
+
+details{margin-top:12px}
+summary{cursor:pointer;color:var(--accent);font:500 14px var(--sans)}
+.thr{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;margin:12px 0 4px;align-items:start}
+.thr dt{margin:0}.thr dd{margin:0;font-size:14.5px}
+.meta{margin:8px 0 0;font-size:14.5px}
+
+.bars{display:grid;gap:10px;margin-top:14px}
+.barrow{display:grid;grid-template-columns:88px 1fr 28px;align-items:center;gap:10px;font-size:14.5px}
+.barrow b{text-align:right;font-variant-numeric:tabular-nums}
+.track{background:var(--surface2);border-radius:4px;height:14px;overflow:hidden}
+.fill{height:100%;background:var(--accent);border-radius:4px}
+.sev{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.sevbox{background:var(--surface2);border:1.5px solid transparent;border-radius:8px;padding:10px 12px}
+.sevbox b{display:block;font:500 30px/1.1 var(--serif);font-variant-numeric:lining-nums}
+.sevbox span{font-size:13.5px;color:var(--muted)}
+.sevbox.hot{border-color:var(--amber);background:var(--amber-bg)}
+.stack{display:flex;height:22px;border-radius:5px;overflow:hidden;margin-top:14px;background:var(--surface2)}
+.stack div{height:100%}
+.hatch{background:repeating-linear-gradient(45deg,var(--seg3),var(--seg3) 4px,transparent 4px,transparent 8px)}
+.keys{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:14px;color:var(--muted)}
+.key{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px}
+.dl{display:grid;grid-template-columns:1fr auto;gap:6px 16px;margin:12px 0 0;font-size:14.5px}
+.dl dt{color:var(--muted)}.dl dd{margin:0;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+
+.chart-scroll{overflow-x:auto;margin-top:8px}
+.chart-scroll svg{display:block;min-width:600px;width:100%;height:auto}
+svg text{font-family:var(--sans)}
+svg .ax{fill:var(--muted);font-size:12.5px}
+svg .lab{fill:var(--ink);font-size:13px;font-weight:600}
+svg .ann{fill:var(--muted);font-size:12.5px}
+svg .grid{stroke:var(--line);stroke-width:1}
+.gauge{position:relative;display:flex;height:16px;border-radius:5px;overflow:hidden;margin-top:16px}
+.z-g{background:var(--green)}.z-a{background:var(--amber)}.z-r{background:var(--red)}
+.mark{position:absolute;top:0;bottom:0;width:3px;background:var(--ink)}
+.scale{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:4px}
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:12px;margin-top:20px}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.fact b{display:block;font:500 22px/1.2 var(--serif)}
+.fact span{color:var(--muted);font-size:14px}
+
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:15px}
+th,td{padding:10px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--muted);font-size:14px}
+tr:last-child td{border-bottom:0}
+.num{font-variant-numeric:tabular-nums}
+
+.foot{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:14.5px}
+.foot ul{margin:8px 0 0;padding-left:20px;max-width:80ch}
+.foot li{margin:4px 0}
+[hidden]{display:none !important}
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>AI governance dashboard</h1>
+      <p class="sub">Northstar Financial, snapshot of 2027-04-30. Built from the governance case study for Beacon, the loan application review assistant.</p>
+    </div>
+    <div class="top-right">
+      <span class="badge">Fictional case study. Every figure is invented.</span>
+      <button class="themebtn" id="themebtn" type="button">Switch light or dark</button>
+    </div>
+  </header>
+
+  <noscript><p class="note">This page needs JavaScript to draw the dashboard.</p></noscript>
+
+  <section class="overview" aria-label="Status of all 18 metrics">
+    <p class="tally" id="tally"></p>
+    <p class="hint">Select a square to open that metric with its thresholds, owner and what it tells leadership.</p>
+    <div class="strip" id="strip"></div>
+    <div class="legend">
+      <span><b aria-hidden="true">●</b> Green: inside thresholds</span>
+      <span><b aria-hidden="true">◆</b> Amber: watch</span>
+      <span><b aria-hidden="true">▲</b> Red: action needed</span>
+      <span><b aria-hidden="true">○</b> No rating: context only</span>
+    </div>
+  </section>
+
+  <nav class="nav" aria-label="Dashboard views">
+    <button class="navbtn" type="button" data-view="board" aria-current="page">Board view</button>
+    <button class="navbtn" type="button" data-view="committee">Committee view</button>
+    <button class="navbtn" type="button" data-view="beacon">Beacon detail</button>
+  </nav>
+
+  <main>
+    <section class="view" id="view-board" aria-label="Board view"></section>
+    <section class="view" id="view-committee" aria-label="Committee view" hidden></section>
+    <section class="view" id="view-beacon" aria-label="Beacon detail" hidden></section>
+  </main>
+
+  <footer class="foot">
+    <strong>How to read this page</strong>
+    <ul>
+      <li>All values are mock data. Only Beacon has real detail behind it in the case study. The other 21 systems are invented to fill the portfolio panels.</li>
+      <li>Green means inside the thresholds set for this dashboard. It does not mean safe. Read it next to control testing (B4) and incidents (C1).</li>
+      <li>The fairness ratio is a screening signal. It does not prove or rule out discrimination, and 0.80 is not a Canadian legal standard.</li>
+      <li>Thresholds are starting values that the AI Governance Committee would calibrate. Definitions are in the Dashboard Specification (NF-AIG-007) in the repository.</li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var LABEL={green:"Green",amber:"Amber",red:"Red",context:"No rating"};
+  var GLYPH={green:"\u25CF",amber:"\u25C6",red:"\u25B2",context:"\u25CB"};
+  var GROUPS={A:"Inventory and lifecycle",B:"Risk and control",C:"Model behaviour and oversight",D:"Third parties"};
+
+  var M=[
+   {id:"A1",g:"A",s:"context",name:"AI systems in inventory by lifecycle stage",v:"22 active systems",
+    d:"Idea 1, Intake 2, Risk assessment 1, Development 3, Testing 2, Approval 1, Live (pilot) 2, Live (full rollout) 10. One system was retired in the last 12 months. 12 of 22 are live.",
+    def:"Count of active inventory records at each stage from Idea to Live, plus systems retired in the last 12 months.",
+    thr:[["context","No rating."],["red","Shown red if any system is live without a passed G6 record."]],
+    own:"AI Governance Office, monthly",
+    tells:"How much AI Northstar runs and where it sits in the process. Growth shows where governance workload is heading."},
+   {id:"A2",g:"A",s:"context",name:"Systems by risk tier",v:"Low 9, Moderate 8, High 5, Critical 0",
+    d:"22 systems. Beacon is one of the five High systems.",
+    def:"Count of active systems at Low, Moderate, High and Critical.",
+    thr:[["context","No rating."],["red","Shown red if any Critical system is live outside a restricted rollout."]],
+    own:"AI Governance Office, monthly",
+    tells:"Where high-risk AI is concentrated. A shift toward High and Critical means more validation and Committee load."},
+   {id:"A3",g:"A",s:"amber",name:"Retroactive intakes",v:"14 percent",
+    d:"3 of 22 systems were found after deployment. All are Low or Moderate and were found in procurement reviews. Two are AI features inside existing vendor products.",
+    def:"Systems found after deployment as a share of the inventory.",
+    thr:[["green","Under 5 percent."],["amber","5 to 15 percent."],["red","Over 15 percent, or any High or Critical system found live without a passed G5."]],
+    own:"AI Governance Office, monthly",
+    tells:"Whether the intake gate is being bypassed. A high share means the rest of the dashboard covers only part of the AI in use."},
+   {id:"A4",g:"A",s:"amber",name:"Gates open beyond 10 business days",v:"1 gate, open 14 days",
+    d:"A Moderate system waiting at G5. The Committee chair has been asked for a date.",
+    def:"Gates with a complete pack and no decision after 10 business days. Also shows gate holds and failures by gate.",
+    thr:[["green","0."],["amber","1 to 2."],["red","3 or more, or any beyond 20 business days."]],
+    own:"AI Governance Committee chair, weekly",
+    tells:"Whether governance is a bottleneck. Long waits push teams to work around the process. Holds and failures show where the process breaks."},
+   {id:"A5",g:"A",s:"green",name:"Days from intake to tier assignment",v:"12 business days",
+    d:"Median from complete intake to tier assignment at G2.",
+    def:"Median business days from complete intake to tier assignment (G2).",
+    thr:[["green","20 or fewer."],["amber","21 to 30."],["red","Over 30."]],
+    own:"AI Governance Office, monthly",
+    tells:"Speed of the front door. Slow intake drives retroactive systems (A3)."},
+   {id:"A6",g:"A",s:"green",name:"Conditions of approval overdue",v:"0 overdue",
+    d:"No condition set at a gate is past its date.",
+    def:"Conditions set at a gate that are past their date.",
+    thr:[["green","0."],["amber","1 to 2, each under 30 days late."],["red","Any pre-pilot or pre-go-live condition overdue, or any over 30 days."]],
+    own:"Business owners, weekly",
+    tells:"Whether approvals are honoured after the meeting. Overdue conditions mean accepted risk is not being reduced."},
+
+   {id:"B1",g:"B",s:"amber",name:"Overdue risk assessments",v:"2 overdue",
+    d:"Both are Moderate systems, 9 and 22 days late. Neither is Beacon, whose first reassessment is due 2027-07-18.",
+    def:"Systems past their reassessment date (High: every 6 months in pilot, then 12. Moderate: 12. Low: 24).",
+    thr:[["green","0."],["amber","A Low or Moderate system under 30 days overdue."],["red","Any High or Critical system overdue, or any overdue 30 days or more."]],
+    own:"AI Governance Office, monthly",
+    tells:"Whether risk ratings are current. A stale tier means the treatment may no longer fit the system."},
+   {id:"B2",g:"B",s:"red",name:"Unresolved high-rated findings",v:"7 open, 1 past due",
+    d:"The past-due finding is 34 days late and belongs to a Moderate system (a vendor assessment). No high-rated findings are open on Beacon.",
+    def:"Open findings rated high from validation, red team, privacy impact assessments, Internal Audit and incident reviews, and how many are past due.",
+    thr:[["green","None past due."],["amber","Past due by under 30 days."],["red","Any past due 30 days or more, or any open at an approval gate."]],
+    own:"Head of Model Risk Management and finding owners, weekly",
+    tells:"The backlog of known risk that has not been fixed. Ageing matters more than the count."},
+   {id:"B3",g:"B",s:"amber",name:"Control implementation status",v:"Beacon: 32 of 34 controls operating",
+    d:"2 are in build (CTL-05, whose first backtest cannot run until outcomes mature, and CTL-28). 5 have an open design gap from incident AI-INC-2027-001 (CTL-01, CTL-03, CTL-12, CTL-19, CTL-33). A new control, CTL-35, is proposed. Amendments P-1 to P-9 are due between 2027-05-14 and 2027-06-11.",
+    def:"Controls by Designed, In build or Operating, and controls with an open design gap.",
+    thr:[["green","All controls of live systems Operating, or a dated plan."],["amber","Any In build past its date, or any open design gap."],["red","A Designed-only control on a live High system past its date."]],
+    own:"Control owners, monthly",
+    tells:"How much of the control set is real and how much is planned. Stops the matrix being read as a description of what exists."},
+   {id:"B4",g:"B",s:"amber",name:"Control testing results",v:"36 of 40 tests done",
+    d:"31 passed (86 percent of those done) and 5 failed. 4 tests are overdue and 1 failed-control remediation is overdue.",
+    def:"Internal Audit tests completed against tests due, the pass rate, and failed-control remediation overdue.",
+    thr:[["green","95 percent or more of due tests done, pass rate 90 percent or more and no overdue remediation."],["amber","Anything between green and red."],["red","Under 85 percent done, pass rate under 80 percent, or a failed control on a High system with no dated plan."]],
+    own:"Internal Audit, quarterly",
+    tells:"Independent evidence that controls work, as opposed to the owner's own report. The strongest evidence on the dashboard."},
+   {id:"B5",g:"B",s:"green",name:"Policy exceptions",v:"3 active, 0 expired",
+    d:"One downward tier override (Committee-approved) and two deferred conditions, neither of them pre-pilot.",
+    def:"Active exceptions by type (gate check exception, deferred condition, downward tier override) and expired ones.",
+    thr:[["green","None past expiry and within Committee appetite."],["amber","Any past expiry by under 30 days."],["red","Any past expiry 30 days or more, or any exception on a High or Critical system without recorded Committee approval."]],
+    own:"AI Governance Committee, monthly",
+    tells:"How often the rules bend. A rising count means the rules do not fit or people work around them. Downward tier overrides show pressure on classification."},
+
+   {id:"C1",g:"C",s:"amber",name:"AI incidents, last 90 days",v:"1 Severity 2",
+    d:"Severity 1: 0. Severity 2: 1. Severity 3: 3. Severity 4: 5. The Severity 2 (AI-INC-2027-001) was notified in 1 hour 35 minutes and had a suspension decision in 4 hours 25 minutes, both inside target. Fault-to-detection took 19 days, and detection time had no target.",
+    def:"Incidents in the last 90 days by severity, response timeliness against targets and fault-to-detection time.",
+    thr:[["green","No Severity 1 or 2."],["amber","One Severity 2 with all targets met."],["red","Any Severity 1, any target missed on a Severity 1 or 2 (notification within 4 hours, suspension decision within 24 hours), or more than one Severity 2."]],
+    own:"AI Governance Office, monthly and weekly to operations",
+    tells:"Whether faults are happening and how well Northstar responds. Fault-to-detection time, known only after the fact, shows how long harm ran unseen."},
+   {id:"C2",g:"C",s:"green",name:"Fairness ratio",v:"0.95",
+    d:"Beacon weekly ratio for the week of Apr 26 (five days). The rolling four-week value is valid again from the week of May 17.",
+    def:"For each system with inferred groups, the group's Standard Review rate divided by the reference group's, weekly and rolling four-week.",
+    thr:[["green","0.90 or above."],["amber","0.80 to 0.89."],["red","Below 0.80. Formal triggers (R-01): below 0.80 in any month, or below 0.90 for two consecutive months. Under heightened monitoring, below 0.85 triggers a same-day review."]],
+    own:"Head of Credit Risk Analytics, weekly",
+    tells:"Whether outcomes differ between groups. It is a screening signal only. It does not prove or rule out discrimination, and 0.80 is not a Canadian legal standard."},
+   {id:"C3",g:"C",s:"green",name:"Performance and stability",v:"Score PSI 0.04",
+    d:"Highest feature PSI is 0.03 after the fix. Gini is not available yet because outcomes are not mature. The earliest backtest is July 2027.",
+    def:"Gini against the validation baseline, and the population stability index (PSI) on the score and the top 10 features.",
+    thr:[["green","PSI 0.10 or below and Gini within 5 percent (relative) of baseline."],["amber","PSI 0.10 to 0.25, or Gini down 5 to 10 percent."],["red","PSI above 0.25 for two consecutive months, or Gini down more than 10 percent."]],
+    own:"Head of Credit Risk Analytics, monthly",
+    tells:"Whether the model still sees the world it was built for. PSI is the early warning and Gini is the confirmation that arrives late."},
+   {id:"C4",g:"C",s:"green",name:"Override and concordance",v:"85 percent concordance",
+    d:"Recommend Decline files this month: 85 percent decline, 11 percent approve (override) and 4 percent escalate. The pilot baseline was 84, 12 and 4.",
+    def:"Share of Recommend Decline files where the final decision is decline (concordance), approve (override) or escalate.",
+    thr:[["green","Concordance 90 percent or below and override 3 to 20 percent."],["amber","Override above 20 percent (possible model error)."],["red","Concordance above 90 percent or override below 3 percent (review and tier reassessment under CTL-08)."]],
+    own:"Head of Credit Adjudication, weekly in pilot and monthly after",
+    tells:"Whether the human review is real. Both extremes matter: too little disagreement suggests rubber-stamping, too much suggests the model is wrong."},
+   {id:"C5",g:"C",s:"green",name:"Oversight capture and review time",v:"99.6 percent capture",
+    d:"Median review time on Recommend Decline files is 22 minutes against a 25-minute baseline estimate (12 percent below).",
+    def:"Rationale capture rate on Recommend Decline files, and median review time on those files against the pre-pilot baseline.",
+    thr:[["green","Capture 99 percent or above, and review time within 25 percent of baseline."],["amber","Capture 98 to under 99 percent, or review time 25 to 40 percent below baseline."],["red","Capture under 98 percent (display suspended, CTL-15), or review time more than 40 percent below baseline."]],
+    own:"Head of Credit Adjudication, weekly",
+    tells:"Whether the record proves oversight happened and whether time pressure is squeezing it. Shrinking review time on the highest-risk path is an early sign of rubber-stamping."},
+   {id:"C6",g:"C",s:"green",name:"Blind re-review and training",v:"91 percent agreement",
+    d:"Blind re-review decisions agree with the senior panel on a 10 percent sample under heightened monitoring. All Workbench users are trained. This is the first reading, so there is no trend yet.",
+    def:"Agreement of blind re-review decisions with a senior panel, and adjudicators with current training and a passed competency check.",
+    thr:[["green","Accuracy stable or rising and every user trained."],["amber","Accuracy down for one quarter."],["red","Accuracy down two consecutive quarters, or any user with access and no current training."]],
+    own:"Head of Credit Adjudication, quarterly and weekly for training",
+    tells:"Whether adjudicators can still judge without the model. The independent check on the oversight metrics above."},
+
+   {id:"D1",g:"D",s:"amber",name:"Vendor issues",v:"5 of 6 vendors with all terms executed",
+    d:"The credit bureau change-notice term is open (A-4, due 2027-05-14). Unannounced model changes: 0. Meridian SLA breaches in Q1: 1. Sub-processor changes awaiting approval: 0. The bureau joined vendor oversight after the incident.",
+    def:"Live AI-related vendors with all required contract terms executed, SLA breaches per quarter, unannounced model changes caught by the canary set, sub-processor changes awaiting approval and vendor incidents.",
+    thr:[["green","All required terms executed, no unannounced model changes and no vendor incident with late notice."],["amber","One required term open with a dated plan, or an SLA breach."],["red","Any unannounced model change, any late incident notice, or an open term with no plan."]],
+    own:"Head of Vendor Risk, monthly",
+    tells:"How much of the risk sits outside Northstar. Vendors can change behaviour without telling you, and the canary set is the only way to know."}
+  ];
+  function get(id){for(var i=0;i<M.length;i++){if(M[i].id===id)return M[i];}}
+  function pill(s){return '<span class="pill '+s+'"><span aria-hidden="true">'+GLYPH[s]+'</span>'+LABEL[s]+'</span>';}
+
+  /* summary strip */
+  var counts={red:0,amber:0,green:0,context:0};
+  M.forEach(function(m){counts[m.s]++;});
+  document.getElementById("tally").innerHTML=M.length+' metrics. <span>'+counts.red+' red, '+counts.amber+' amber, '+counts.green+' green and '+counts.context+' without a rating.</span>';
+  var strip="";
+  Object.keys(GROUPS).forEach(function(k){
+    var tiles=M.filter(function(m){return m.g===k;}).map(function(m){
+      return '<button type="button" class="tile s-'+m.s+'" data-go="'+m.id+'" title="'+m.name+'" aria-label="'+m.id+' '+m.name+', '+LABEL[m.s]+'"><span>'+m.id+'</span><i aria-hidden="true">'+GLYPH[m.s]+'</i></button>';
+    }).join("");
+    strip+='<div class="grp"><h3>'+GROUPS[k]+'</h3><div class="tiles">'+tiles+'</div></div>';
+  });
+  document.getElementById("strip").innerHTML=strip;
+
+  /* fairness chart */
+  var WK=["Mar 1","Mar 8","Mar 15","Mar 22","Mar 29","Apr 5","Apr 12","Apr 19","Apr 26"];
+  var WEEKLY=[0.95,0.94,0.90,0.79,0.70,null,null,0.93,0.95];
+  var ROLL=[0.95,0.95,0.94,0.89,0.83,null,null,null,null];
+  function chart(){
+    var W=760,H=340,l=48,r=24,t=24,b=48,pw=W-l-r,ph=H-t-b;
+    function x(i){return l+i*pw/8;}
+    function y(v){return t+(1-(v-0.6)/0.4)*ph;}
+    function col(v){return v>=0.9?"var(--green)":(v>=0.8?"var(--amber)":"var(--red)");}
+    function path(a){var d="",pen=false;a.forEach(function(v,i){if(v===null){pen=false;return;}d+=(pen?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1)+" ";pen=true;});return d.trim();}
+    chart.n=(chart.n||0)+1;
+    var u=chart.n;
+    var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-labelledby="ct'+u+' cd'+u+'"><title id="ct'+u+'">Beacon fairness ratio by week</title>';
+    s+='<desc id="cd'+u+'">Weekly fairness ratio fell from 0.95 in early March to 0.70 in the week of Mar 29 after a data fault, output was suspended from Apr 5, and the ratio recovered to 0.93 and then 0.95 after resumption on Apr 19.</desc>';
+    [0.6,0.7,0.8,0.9,1.0].forEach(function(v){
+      s+='<line class="grid" x1="'+l+'" x2="'+(W-r)+'" y1="'+y(v).toFixed(1)+'" y2="'+y(v).toFixed(1)+'"/><text class="ax" x="'+(l-8)+'" y="'+(y(v)+4).toFixed(1)+'" text-anchor="end">'+v.toFixed(2)+'</text>';
+    });
+    s+='<rect x="'+x(5).toFixed(1)+'" y="'+t+'" width="'+(x(7)-x(5)).toFixed(1)+'" height="'+ph+'" fill="var(--band)"/>';
+    s+='<text class="ann" x="'+((x(5)+x(7))/2).toFixed(1)+'" y="'+(t+ph-12)+'" text-anchor="middle">Output suspended</text>';
+    s+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(0.9).toFixed(1)+'" y2="'+y(0.9).toFixed(1)+'" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="6 5"/>';
+    s+='<text class="ann" x="'+(l+6)+'" y="'+(y(0.9)+15).toFixed(1)+'">Amber below 0.90</text>';
+    s+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(0.8).toFixed(1)+'" y2="'+y(0.8).toFixed(1)+'" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="6 5"/>';
+    s+='<text class="ann" x="'+(l+6)+'" y="'+(y(0.8)+15).toFixed(1)+'">Red below 0.80</text>';
+    var fx=x(2)+(x(3)-x(2))*2/7;
+    s+='<line x1="'+fx.toFixed(1)+'" x2="'+fx.toFixed(1)+'" y1="'+t+'" y2="'+(t+ph)+'" stroke="var(--muted)" stroke-width="1" stroke-dasharray="2 4"/>';
+    s+='<text class="ann" x="'+(fx+6).toFixed(1)+'" y="'+(t+14)+'">Data fault begins Mar 17</text>';
+    s+='<line x1="'+x(5).toFixed(1)+'" x2="'+x(5).toFixed(1)+'" y1="'+t+'" y2="'+(t+ph)+'" stroke="var(--muted)" stroke-width="1" stroke-dasharray="2 4"/>';
+    s+='<text class="ann" x="'+(x(5)-6).toFixed(1)+'" y="'+(t+34)+'" text-anchor="end">Incident opened Apr 5</text>';
+    s+='<path d="'+path(ROLL)+'" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 4"/>';
+    s+='<path d="'+path(WEEKLY)+'" fill="none" stroke="var(--accent)" stroke-width="2.5"/>';
+    WEEKLY.forEach(function(v,i){
+      if(v===null)return;
+      s+='<circle cx="'+x(i).toFixed(1)+'" cy="'+y(v).toFixed(1)+'" r="5.5" fill="'+col(v)+'" stroke="var(--surface)" stroke-width="2"/>';
+      var below=v<0.9;
+      s+='<text class="lab" x="'+x(i).toFixed(1)+'" y="'+(y(v)+(below?24:-11)).toFixed(1)+'" text-anchor="middle">'+v.toFixed(2)+'</text>';
+    });
+    WK.forEach(function(w,i){s+='<text class="ax" x="'+x(i).toFixed(1)+'" y="'+(H-b+20)+'" text-anchor="middle">'+w+'</text>';});
+    s+='<text class="ax" x="'+(W/2)+'" y="'+(H-6)+'" text-anchor="middle">Week starting (Monday)</text></svg>';
+    return '<div class="chart-scroll">'+s+'</div>'+
+      '<div class="keys"><span class="key"><span class="sw" style="background:var(--accent)"></span>Weekly ratio (point colour shows the band)</span><span class="key"><span class="sw" style="background:var(--muted)"></span>Rolling four-week ratio (dashed)</span></div>';
+  }
+  function dataTable(){
+    var notes={2:"The bureau data fault begins Wed Mar 17",3:"Signal 1",4:"Incident opened Apr 5",5:"Beacon output off from Apr 5",6:"Manual queue",7:"Resumed Apr 19 after gate G8",8:"Five-day week to Apr 30"};
+    var rows=WK.map(function(w,i){
+      var wv=WEEKLY[i]===null?"Suspended":WEEKLY[i].toFixed(2);
+      var rv=ROLL[i]!==null?ROLL[i].toFixed(2):(i===5||i===6?"Suspended":"Not valid");
+      return '<tr><td>'+w+'</td><td class="num">'+wv+'</td><td class="num">'+rv+'</td><td>'+(notes[i]||"Normal")+'</td></tr>';
+    }).join("");
+    return '<details><summary>Show the data behind the chart</summary><div class="tablewrap" style="margin-top:10px"><table><thead><tr><th>Week starting</th><th>Weekly ratio</th><th>Rolling four-week</th><th>Note</th></tr></thead><tbody>'+rows+'</tbody></table></div></details>';
+  }
+
+  /* shared pieces */
+  function head(m){return '<div class="card-head"><h3><span class="mid">'+m.id+'</span>'+m.name+'</h3>'+pill(m.s)+'</div>';}
+  function mini(id){var m=get(id);return '<article class="card">'+head(m)+'<p class="val">'+m.v+'</p><p class="note">'+m.d+'</p><button type="button" class="linkbtn" data-go="'+id+'">See thresholds and owner</button></article>';}
+  function fullCard(m){
+    var thr=m.thr.map(function(p){return '<dt>'+pill(p[0])+'</dt><dd>'+p[1]+'</dd>';}).join("");
+    return '<article class="card" id="m-'+m.id+'" tabindex="-1">'+head(m)+'<p class="val">'+m.v+'</p><p class="note">'+m.d+'</p>'+
+      '<details><summary>Thresholds, owner and what it tells leadership</summary><p class="meta"><b>What it measures:</b> '+m.def+'</p><dl class="thr">'+thr+'</dl><p class="meta"><b>Owner and frequency:</b> '+m.own+'</p><p class="meta"><b>What it tells leadership:</b> '+m.tells+'</p></details></article>';
+  }
+  function tierBars(){
+    var t=[["Low",9],["Moderate",8],["High",5],["Critical",0]];
+    return '<div class="bars">'+t.map(function(r){return '<div class="barrow"><span>'+r[0]+'</span><div class="track"><div class="fill" style="width:'+(r[1]/9*100)+'%"></div></div><b>'+r[1]+'</b></div>';}).join("")+'</div>';
+  }
+
+  /* board view */
+  var decisions=[
+    ["1","Restrict the Moderate system with the 34-day-old finding until it is closed, or accept the risk in writing","B2","Business owner of that system, AI Governance Committee","Next Committee meeting"],
+    ["2","Set new dates for the two overdue reassessments, or restrict the systems","B1","AI Governance Office","Next Committee meeting"],
+    ["3","Approve amendments P-1 to P-9 from the incident review","B3, C1","AI Governance Committee","2027-05-14"],
+    ["4","Confirm that Beacon expansion stays paused until the exit review (2027-06-14) and the reassessment (2027-07-18)","C2, C4","AI Governance Committee","2027-06-14"],
+    ["5","Note the three retroactive systems and require intake within 30 days (lifecycle section 7)","A3","AI Governance Office","2027-05-31"]
+  ];
+  var c2=get("C2"),a2=get("A2"),c1=get("C1"),b4=get("B4");
+  var board='';
+  board+='<div class="sec"><h2>Where AI risk sits and how it is behaving</h2><p>One page for the Board Risk Committee. Eight metrics and the decisions that are needed this month.</p></div>';
+  board+='<div class="g2">';
+  board+='<article class="card"><div class="card-head"><h3><span class="mid">A2</span>Systems by risk tier</h3>'+pill(a2.s)+'</div>'+tierBars()+'<p class="note">22 active systems. Beacon is one of the five High systems.</p></article>';
+  board+='<article class="card"><div class="card-head"><h3><span class="mid">C1</span>AI incidents, last 90 days</h3>'+pill(c1.s)+'</div>'+
+    '<div class="sev"><div class="sevbox"><b>0</b><span>Severity 1</span></div><div class="sevbox hot"><b>1</b><span>Severity 2</span></div><div class="sevbox"><b>3</b><span>Severity 3</span></div><div class="sevbox"><b>5</b><span>Severity 4</span></div></div>'+
+    '<p class="note">The Severity 2 (AI-INC-2027-001) was notified in 1 hour 35 minutes and had a suspension decision in 4 hours 25 minutes, both inside target. Fault-to-detection took 19 days, and that had no target.</p></article>';
+  board+='</div>';
+  board+='<div class="sec"><h2>Fairness ratio: Beacon</h2><p>A bureau data fault cut the ratio to 0.70 in the week of Mar 29. Output was suspended on Apr 5 and the ratio recovered to 0.95 after the fix. It is a screening signal only.</p></div>';
+  board+='<article class="card"><div class="card-head"><h3><span class="mid">C2</span>Group Standard Review rate divided by reference group rate</h3>'+pill(c2.s)+'</div>'+chart()+dataTable()+'</article>';
+  board+='<div class="sec"><h2>Backlog and exceptions</h2></div>';
+  board+='<div class="g3">'+mini("B1")+mini("B2")+mini("B5")+'</div>';
+  board+='<div class="sec"><h2>Independent assurance and third parties</h2></div>';
+  board+='<div class="g2">';
+  board+='<article class="card"><div class="card-head"><h3><span class="mid">B4</span>Control testing results</h3>'+pill(b4.s)+'</div>'+
+    '<p class="val">36 of 40 tests done</p>'+
+    '<div class="stack" role="img" aria-label="31 passed, 5 failed, 4 not yet done out of 40 due"><div style="width:77.5%;background:var(--green)"></div><div style="width:12.5%;background:var(--red)"></div><div class="hatch" style="width:10%"></div></div>'+
+    '<div class="keys"><span class="key"><span class="sw" style="background:var(--green)"></span>31 passed</span><span class="key"><span class="sw" style="background:var(--red)"></span>5 failed</span><span class="key"><span class="sw hatch"></span>4 not yet done</span></div>'+
+    '<p class="note">86 percent of completed tests passed. 1 failed-control remediation is overdue.</p><button type="button" class="linkbtn" data-go="B4">See thresholds and owner</button></article>';
+  board+=mini("D1");
+  board+='</div>';
+  board+='<div class="sec"><h2>Decisions needed this month</h2></div>';
+  board+='<div class="tablewrap"><table><thead><tr><th>#</th><th>Decision</th><th>Metric</th><th>Owner</th><th>By</th></tr></thead><tbody>'+
+    decisions.map(function(d){return '<tr><td class="num">'+d[0]+'</td><td>'+d[1]+'</td><td>'+d[2]+'</td><td>'+d[3]+'</td><td>'+d[4]+'</td></tr>';}).join("")+'</tbody></table></div>';
+  document.getElementById("view-board").innerHTML=board;
+
+  /* committee view */
+  var com='<div class="sec"><h2>All 18 metrics</h2><p>Four panels with the same definitions the Board view draws on. Open a card for thresholds, owner and what the metric tells leadership.</p></div>';
+  var ranges={A:"A1 to A6",B:"B1 to B5",C:"C1 to C6",D:"D1"};
+  Object.keys(GROUPS).forEach(function(k){
+    com+='<div class="sec"><h2>'+GROUPS[k]+'</h2><p>Metrics '+ranges[k]+'</p></div><div class="g2">'+M.filter(function(m){return m.g===k;}).map(fullCard).join("")+'</div>';
+  });
+  document.getElementById("view-committee").innerHTML=com;
+
+  /* beacon view */
+  var actions=[
+    ["A-1","Patch the parser and fail closed on unreadable dates","Director, Credit Analytics Engineering","2027-04-09","Done"],
+    ["A-2","Re-score 171 files and re-review 52 declines","Head of Credit Adjudication","2027-04-12","Done"],
+    ["A-3","Contact affected applicants and correct records","SVP, Consumer and Small Business Lending, with Compliance","2027-04-16","Done"],
+    ["A-4","Bring the bureau feed into third-party oversight (P-6)","Head of Vendor Risk","2027-05-14","Open"],
+    ["A-5","Build the feed validation control (P-1)","Director, Credit Analytics Engineering","2027-05-28","Open"],
+    ["A-6","Add the daily bureau format canary file (P-1)","Director, Credit Analytics Engineering","2027-05-07","Open"],
+    ["A-7","Amend CTL-12, CTL-03 and CTL-33 (P-2, P-3, P-4)","Head of Credit Risk Analytics and AI Governance Office","2027-05-14","Open"],
+    ["A-8","Add pattern escalation to the oversight framework (P-5)","Head of Credit Adjudication","2027-05-14","Open"],
+    ["A-9","Test a variant without the feature or with its influence capped. Committee decision on the feature (P-7)","Head of Model Risk Management","2027-06-11","Open"],
+    ["A-10","Update the intake, Risk Register, Control Matrix and RACI (P-8, P-9)","AI Governance Office","2027-05-14","Open"],
+    ["A-11","Exit review of heightened monitoring","AI Governance Office","2027-06-14","Open"],
+    ["A-12","Report to the Board Risk Committee","Chief Risk Officer","Next quarterly meeting","Open"]
+  ];
+  var gaps=[
+    ["CTL-01","P-7: data degradation analysis for retained proxy features"],
+    ["CTL-03","P-3: earlier trigger and confidence intervals on weekly values"],
+    ["CTL-12","P-2: raw-input and fairness check before a drift alert is closed"],
+    ["CTL-19","P-6: bring the credit bureau feed into third-party oversight"],
+    ["CTL-33","P-4: link related alerts and state the check performed"]
+  ];
+  var bc='';
+  bc+='<div class="sec"><h2>Beacon, loan application review assistant</h2><p>System level view. Beacon is the only system with a full risk register and control matrix in the case study.</p></div>';
+  bc+='<div class="facts">'+
+    '<div class="fact"><b>High, score 16</b><span>Risk tier</span></div>'+
+    '<div class="fact"><b>Monitoring, gate G7</b><span>Lifecycle stage</span></div>'+
+    '<div class="fact"><b>2 teams, Ontario</b><span>Pilot scope, started 2027-01-18</span></div>'+
+    '<div class="fact"><b>Resumed 2027-04-19</b><span>After incident AI-INC-2027-001 (Severity 2)</span></div>'+
+    '<div class="fact"><b>Expansion paused</b><span>Until the exit review on 2027-06-14 and the reassessment on 2027-07-18</span></div>'+
+  '</div>';
+  bc+='<div class="sec"><h2>Fairness ratio</h2></div>';
+  bc+='<article class="card"><div class="card-head"><h3><span class="mid">C2</span>Group Standard Review rate divided by reference group rate</h3>'+pill(c2.s)+'</div>'+chart()+dataTable()+'</article>';
+  bc+='<div class="sec"><h2>Controls and oversight</h2></div><div class="g2">';
+  bc+='<article class="card"><div class="card-head"><h3><span class="mid">B3</span>Control status, 34 controls</h3>'+pill("amber")+'</div>'+
+    '<p class="val">32 operating, 2 in build</p>'+
+    '<div class="stack" role="img" aria-label="32 operating and 2 in build out of 34 controls"><div style="width:94.1%;background:var(--green)"></div><div style="width:5.9%;background:var(--amber)"></div></div>'+
+    '<div class="keys"><span class="key"><span class="sw" style="background:var(--green)"></span>32 operating</span><span class="key"><span class="sw" style="background:var(--amber)"></span>2 in build (CTL-05, CTL-28)</span><span class="key"><span class="sw" style="background:var(--seg3)"></span>0 designed only</span></div>'+
+    '<p class="note"><b>Open design gaps from the incident</b></p>'+
+    '<div class="tablewrap" style="margin-top:8px"><table style="min-width:0"><tbody>'+gaps.map(function(g){return '<tr><td class="num">'+g[0]+'</td><td>'+g[1]+'</td></tr>';}).join("")+'<tr><td class="num">CTL-35</td><td>Proposed (P-1): validate third-party data feeds at ingestion</td></tr></tbody></table></div></article>';
+  bc+='<article class="card"><div class="card-head"><h3><span class="mid">C4</span>Recommend Decline decisions</h3>'+pill("green")+'</div>'+
+    '<p class="note" style="margin-top:12px">This month</p>'+
+    '<div class="stack" role="img" aria-label="85 percent decline, 11 percent approve, 4 percent escalate" style="margin-top:6px"><div style="width:85%;background:var(--accent)"></div><div style="width:11%;background:var(--seg2)"></div><div style="width:4%;background:var(--seg3)"></div></div>'+
+    '<p class="note" style="margin-top:12px">Pilot baseline</p>'+
+    '<div class="stack" role="img" aria-label="84 percent decline, 12 percent approve, 4 percent escalate" style="margin-top:6px"><div style="width:84%;background:var(--accent)"></div><div style="width:12%;background:var(--seg2)"></div><div style="width:4%;background:var(--seg3)"></div></div>'+
+    '<div class="keys"><span class="key"><span class="sw" style="background:var(--accent)"></span>Decline (concordance)</span><span class="key"><span class="sw" style="background:var(--seg2)"></span>Approve (override)</span><span class="key"><span class="sw" style="background:var(--seg3)"></span>Escalate</span></div>'+
+    '<dl class="dl"><dt>Rationale capture (C5)</dt><dd>99.6 percent</dd><dt>Median review time (C5)</dt><dd>22 min, baseline 25</dd><dt>Blind re-review agreement (C6)</dt><dd>91 percent</dd></dl></article>';
+  bc+='</div>';
+  bc+='<div class="sec"><h2>Stability and vendors</h2></div><div class="g2">';
+  bc+='<article class="card"><div class="card-head"><h3><span class="mid">C3</span>Score stability (PSI)</h3>'+pill("green")+'</div>'+
+    '<p class="val">0.04</p><p class="note">Score PSI. Highest feature PSI is 0.03 after the fix. Gini is not available until outcomes mature, with the earliest backtest in July 2027.</p>'+
+    '<div class="gauge" role="img" aria-label="Score PSI 0.04 and highest feature PSI 0.03, both in the green zone below 0.10"><div class="z-g" style="flex:0 0 33.33%"></div><div class="z-a" style="flex:0 0 50%"></div><div class="z-r" style="flex:1"></div><span class="mark" style="left:13.3%"></span><span class="mark" style="left:9.5%"></span></div>'+
+    '<div class="scale"><span>0</span><span>0.10 watch</span><span>0.25 investigate</span><span>0.30</span></div></article>';
+  bc+='<article class="card"><div class="card-head"><h3><span class="mid">D1</span>Vendors</h3>'+pill("amber")+'</div>'+
+    '<dl class="dl"><dt>Live AI-related vendors</dt><dd>6</dd><dt>With all required terms executed</dt><dd>5</dd><dt>Unannounced model changes</dt><dd>0</dd><dt>Meridian SLA breaches in Q1</dt><dd>1</dd><dt>Sub-processor changes awaiting approval</dt><dd>0</dd></dl>'+
+    '<p class="note">Open term: credit bureau change notice (action A-4, due 2027-05-14). The bureau joined vendor oversight after the incident.</p></article>';
+  bc+='</div>';
+  bc+='<div class="sec"><h2>Incident actions</h2><p>AI-INC-2027-001. 3 done and 9 open, none overdue. Exit review of heightened monitoring is on 2027-06-14.</p></div>';
+  bc+='<div class="tablewrap"><table><thead><tr><th>ID</th><th>Action</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>'+
+    actions.map(function(a){return '<tr><td class="num">'+a[0]+'</td><td>'+a[1]+'</td><td>'+a[2]+'</td><td class="num">'+a[3]+'</td><td>'+(a[4]==="Done"?pill("green").replace("Green","Done"):pill("context").replace("No rating","Open"))+'</td></tr>';}).join("")+'</tbody></table></div>';
+  document.getElementById("view-beacon").innerHTML=bc;
+
+  /* navigation */
+  var btns=[].slice.call(document.querySelectorAll(".navbtn"));
+  var views={board:document.getElementById("view-board"),committee:document.getElementById("view-committee"),beacon:document.getElementById("view-beacon")};
+  function show(name){
+    btns.forEach(function(b){if(b.dataset.view===name){b.setAttribute("aria-current","page");}else{b.removeAttribute("aria-current");}});
+    Object.keys(views).forEach(function(k){views[k].hidden=(k!==name);});
+  }
+  btns.forEach(function(b){b.addEventListener("click",function(){show(b.dataset.view);});});
+  function goTo(id){
+    show("committee");
+    var el=document.getElementById("m-"+id);
+    if(!el)return;
+    var d=el.querySelector("details"); if(d)d.open=true;
+    el.scrollIntoView({block:"center"});
+    el.focus({preventScroll:true});
+  }
+  document.addEventListener("click",function(e){
+    var t=e.target.closest("[data-go]");
+    if(t){goTo(t.getAttribute("data-go"));}
+  });
+
+  /* theme */
+  document.getElementById("themebtn").addEventListener("click",function(){
+    var root=document.documentElement;
+    var cur=root.getAttribute("data-theme")||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+    root.setAttribute("data-theme",cur==="dark"?"light":"dark");
+  });
+})();
+</script>
+</body>
+</html>
